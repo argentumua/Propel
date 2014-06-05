@@ -230,14 +230,14 @@ class PropelTableComparator
 
         foreach ($toTableIndices as $toTableIndexPos => $toTableIndex) {
             foreach ($fromTableIndices as $fromTableIndexPos => $fromTableIndex) {
-                if (PropelIndexComparator::computeDiff($fromTableIndex, $toTableIndex, $caseInsensitive) === false) {
-                    unset($fromTableIndices[$fromTableIndexPos]);
-                    unset($toTableIndices[$toTableIndexPos]);
-                } else {
-                    $test = $caseInsensitive ?
-                        strtolower($fromTableIndex->getName()) == strtolower($toTableIndex->getName()) :
-                        $fromTableIndex->getName() == $toTableIndex->getName();
-                    if ($test) {
+                $sameName = $caseInsensitive ?
+                    strtolower($fromTableIndex->getName()) == strtolower($toTableIndex->getName()) :
+                    $fromTableIndex->getName() == $toTableIndex->getName();
+                if ($sameName) {
+                    if (PropelIndexComparator::computeDiff($fromTableIndex, $toTableIndex, $caseInsensitive) === false) {
+                        unset($fromTableIndices[$fromTableIndexPos]);
+                        unset($toTableIndices[$toTableIndexPos]);
+                    } else {
                         // same name, but different columns
                         $this->tableDiff->addModifiedIndex($fromTableIndex->getName(), $fromTableIndex, $toTableIndex);
                         unset($fromTableIndices[$fromTableIndexPos]);
